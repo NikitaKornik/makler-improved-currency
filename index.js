@@ -103,11 +103,11 @@ document.querySelectorAll("input, a, button").forEach((e) => {
   e.addEventListener("click", () => {
     setTimeout(() => {
       if (document.querySelector(".initialPrice")) {
-        (tick = 10), clearInterval(timerID), startTimer();
+        (tick = 20), clearInterval(timerID), startTimer();
       } else {
-        (tick = 10), clearInterval(timerID), setTimeout("addPriceBlock()", 500);
+        (tick = 20), clearInterval(timerID), setTimeout("addPriceBlock()", 500);
       }
-    }, 300);
+    }, 400);
   });
 });
 
@@ -115,10 +115,10 @@ document.querySelectorAll("input").forEach((e) => {e.addEventListener('keypress'
   if (key.key === 'Enter'){
     setTimeout(() => {
       if (document.querySelector(".initialPrice")) {
-        (tick = 10), clearInterval(timerID), startTimer();
+        (tick = 20), clearInterval(timerID), startTimer();
       } else {
-        (tick = 10), clearInterval(timerID), setTimeout("addPriceBlock()", 500);
+        (tick = 20), clearInterval(timerID), setTimeout("addPriceBlock()", 500);
       }
-    }, 300);
+    }, 400);
   }})
 })
