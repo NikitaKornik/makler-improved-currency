@@ -107,7 +107,7 @@ document.querySelectorAll("input, a, button").forEach((e) => {
       } else {
         (tick = 10), clearInterval(timerID), setTimeout("addPriceBlock()", 500);
       }
-    }, 200);
+    }, 300);
   });
 });
 
@@ -119,6 +119,6 @@ document.querySelectorAll("input").forEach((e) => {e.addEventListener('keypress'
       } else {
         (tick = 10), clearInterval(timerID), setTimeout("addPriceBlock()", 500);
       }
-    }, 200);
+    }, 300);
   }})
 })
