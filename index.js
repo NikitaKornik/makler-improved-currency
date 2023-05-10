@@ -17,7 +17,7 @@ function addPriceBlock() {
     span.className = "initialPrice";
     span.innerHTML = e.textContent;
     e.append(span);
-  });
+});
   startTimer();
 }
 
@@ -64,7 +64,8 @@ function startTimer() {
       intervalRestart();
     });
     document
-      .querySelector(".switchBtn-Dollar").addEventListener("click", () => {
+      .querySelector(".switchBtn-Dollar")
+      .addEventListener("click", () => {
         currency = [
           { v: "$", p: 1, to: " $" },
           { v: "руб", p: 0.06135, to: " $" },
@@ -92,15 +93,17 @@ function startTimer() {
       intervalRestart();
     });
   }
-  function intervalRestart(){
+  function intervalRestart() {
     tick = 10;
     clearInterval(timerID);
     startTimer();
   }
 }
 
-document.querySelectorAll("input, a, button").forEach(() => {
-  addEventListener("click", () => {
-    (tick = 10), clearInterval(timerID), startTimer();
+document.querySelectorAll("input, a, button").forEach((e) => {
+  e.addEventListener("click", () => {setTimeout(() => {
+    if (document.querySelector(".initialPrice")){(tick = 10), clearInterval(timerID), startTimer()}
+    else {(tick = 10), clearInterval(timerID), setTimeout("addPriceBlock()", 500);}}, 200)
+    console.log(e);
   });
 });
