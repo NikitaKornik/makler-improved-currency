@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./popup.css" />
+    <script src="popup.js" defer></script>
+  </head>
+  <body>
+    <form name="main">
+      <!-- <label for="app-on">ON</label>
+      <input id="app-on" type="radio" value="on" name="app" checked />
+      <label for="app-off">OFF</label>
+      <input id="app-off" type="radio" value="off" name="app" /> -->
+
+      <button type="button" id="refresh">Calculate</button>
+      <hr />
+      <label for="currency">Preferred currency: </label>
+      <select name="currency" id="currency">
+        <option value="prub selected">PMR Ruble</option>
+        <!-- <option value="lei">Moldavian Lei</option>
+        <option value="usd">US Dollar</option>
+        <option value="eur">Euro</option>
+        <option value="rub">Russian Ruble</option> -->
+      </select>
+      <br />
+      <label for="lang">Language: </label>
+      <select name="lang" id="currency">
+        <!-- <option value="ru">Русский</option> -->
+        <option value="en" selected>English</option>
+        <!-- <option value="ro">Română</option>
+        <option value="uk">Українська</option> -->
+      </select>
+      <br />
+      <label for="original-price">Display original price: </label>
+      <input
+        id="original-price"
+        type="checkbox"
+        name="original-price"
+        checked
+        disabled
+        title="Feature is not working yet"
+      />
+    </form>
+    <!-- <hr />
+    <h3>Exchange rates</h3>
+    <table>
+      <tr>
+        <th>currency</th>
+        <th>rate</th>
+      </tr>
+      <tr>
+        <td>USD/EUR</td>
+        <td>1.1</td>
+      </tr>
+      <tr>
+        <td>EUR/USD</td>
+        <td>1.2</td>
+      </tr>
+    </table> -->
+  </body>
+</html>

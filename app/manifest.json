@@ -12,11 +12,15 @@
     {
       "matches": ["https://makler.md/*"],
       "js": ["content.js"],
-      "run_at": "document_end"
+      "run_at": "document_start"
     }
   ],
-  "action": {
-    "default_title": "makler.md currency converter"
+  "background": {
+    "service_worker": "background.js"
   },
-  "permissions": ["storage"]
+  "action": {
+    "default_title": "makler.md currency converter",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs", "storage"]
 }
