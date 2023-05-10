@@ -17,7 +17,7 @@ function addPriceBlock() {
     span.className = "initialPrice";
     span.innerHTML = e.textContent;
     e.append(span);
-});
+  });
   startTimer();
 }
 
@@ -38,7 +38,6 @@ function startTimer() {
       });
     });
     tick *= 20;
-    console.log(tick);
     clearInterval(timerID);
     startTimer();
   }, tick);
@@ -101,9 +100,19 @@ function startTimer() {
 }
 
 document.querySelectorAll("input, a, button").forEach((e) => {
-  e.addEventListener("click", () => {setTimeout(() => {
-    if (document.querySelector(".initialPrice")){(tick = 10), clearInterval(timerID), startTimer()}
-    else {(tick = 10), clearInterval(timerID), setTimeout("addPriceBlock()", 500);}}, 200)
-    console.log(e);
+  e.addEventListener("click", () => {
+    setTimeout(() => {
+      if (document.querySelector(".initialPrice")) {
+        (tick = 10), clearInterval(timerID), startTimer();
+      } else {
+        (tick = 10), clearInterval(timerID), setTimeout("addPriceBlock()", 500);
+      }
+    }, 200);
   });
 });
+
+document.querySelectorAll("input").forEach((e) => {e.addEventListener('keypress', (key) => {
+  if (key.key === 'Enter'){
+  setTimeout(() => {(tick = 10), clearInterval(timerID), setTimeout("addPriceBlock()", 500)}, 300);
+  }})
+})
