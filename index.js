@@ -113,6 +113,12 @@ document.querySelectorAll("input, a, button").forEach((e) => {
 
 document.querySelectorAll("input").forEach((e) => {e.addEventListener('keypress', (key) => {
   if (key.key === 'Enter'){
-  setTimeout(() => {(tick = 10), clearInterval(timerID), setTimeout("addPriceBlock()", 500)}, 300);
+    setTimeout(() => {
+      if (document.querySelector(".initialPrice")) {
+        (tick = 10), clearInterval(timerID), startTimer();
+      } else {
+        (tick = 10), clearInterval(timerID), setTimeout("addPriceBlock()", 500);
+      }
+    }, 200);
   }})
 })
