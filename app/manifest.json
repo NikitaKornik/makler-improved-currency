@@ -1,0 +1,22 @@
+{
+  "name": "makler.md currency converter",
+  "description": "Set currency and automatically convert all sale announcements across the makler.md",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "icons": {
+    "128": "images/icon-128.png",
+    "64": "images/icon-64.png",
+    "48": "images/icon-48.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://makler.md/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_title": "makler.md currency converter"
+  },
+  "permissions": ["storage"]
+}
