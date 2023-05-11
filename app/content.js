@@ -3,33 +3,57 @@ const fragments = [
   { fragment: "USD", sign: "USD" },
   { fragment: "€", sign: "EUR" },
   { fragment: "EUR", sign: "EUR" },
-  { fragment: "руб", sign: "PRUB" },
-  { fragment: "TDRub", sign: "PRUB" },
-  { fragment: "Lei", sign: "LEI" },
+  { fragment: "руб", sign: "RUP" },
+  { fragment: "TDRub", sign: "RUP" },
+  { fragment: "Lei", sign: "MDL" },
 ];
 
 const currencySigns = {
-  PRUB: "руб",
+  RUP: "руб",
   USD: "$",
   EUR: "€",
-  LEI: "Lei",
+  MDL: "Lei",
+  UAH: "грн",
+  RUB: "₽",
 };
 
 const exchangeRates = [
-  // { name: "PRUB/USD",rate: 16.3 },
-  { name: "USD/PRUB", rate: 16.35 },
-  // { name: "PRUB/EUR", rate: 18.45 },
-  { name: "EUR/PRUB", rate: 18.45 },
-  // { name: "PRUB/LEI", rate: 0.95 },
-  { name: "LEI/PRUB", rate: 0.95 },
+  { name: "RUP/USD", rate: 16.35 },
+  { name: "USD/RUP", rate: 16.3 },
+  { name: "RUP/EUR", rate: 18.3 },
+  { name: "EUR/RUP", rate: 17.45 },
+  { name: "RUP/MDL", rate: 0.95 },
+  { name: "MDL/RUP", rate: 0.88 },
+
+  { name: "MDL/USD", rate: 17.89 },
+  { name: "USD/MDL", rate: 17.7 },
+  { name: "MDL/EUR", rate: 19.73 },
+  { name: "EUR/MDL", rate: 19.5 },
+
+  { name: "USD/EUR", rate: 0.89 },
+  { name: "EUR/USD", rate: 1.09 },
 ];
 
-const preferredCurrency = "PRUB";
+async function getPreferredCurrency() {
+  return (await chrome.storage.sync.get("preferredCurrency")).preferredCurrency;
+}
 
-const priceSelector = ".ls-detail_price, .item_title_price, .title>.price";
+async function getSwitchControl() {
+  return (await chrome.storage.sync.get("switchControl")).switchControl;
+}
 
-function updatePrices() {
-  document.querySelectorAll(priceSelector).forEach((priceBlock) => {
+function getPriceSelector() {
+  const feedPage = ".ls-detail_price";
+  const itemPage = ".item_title_price";
+  const myItemsPage = ".title>.price";
+
+  return [feedPage, itemPage, myItemsPage].join(",");
+}
+
+async function updatePrices() {
+  const preferredCurrency = await getPreferredCurrency();
+
+  document.querySelectorAll(getPriceSelector()).forEach((priceBlock) => {
     fragments.forEach(({ fragment, sign }) => {
       if (priceBlock.textContent.includes(fragment)) {
         const originPrice = Number(priceBlock.textContent.replace(/\D+/g, ""));
@@ -66,7 +90,7 @@ function updatePrices() {
 }
 
 function revokePrices() {
-  document.querySelectorAll(priceSelector).forEach((priceBlock) => {
+  document.querySelectorAll(getPriceSelector()).forEach((priceBlock) => {
     const { originValue } = priceBlock.dataset;
 
     if (originValue) {
@@ -77,17 +101,34 @@ function revokePrices() {
 }
 
 async function refreshPrices() {
-  const { switchControl } = await chrome.storage.sync.get("switchControl");
+  const switchControl = await getSwitchControl();
 
-  if (switchControl === "on") {
-    updatePrices();
-  } else {
-    revokePrices();
+  switch (switchControl) {
+    case "on":
+      updatePrices();
+      break;
+    case "off":
+      revokePrices();
+      break;
+    default:
+      return;
   }
 }
 
 chrome.runtime.onMessage.addListener(function (payload) {
   if (payload === "refresh") {
+    refreshPrices();
+  }
+});
+
+chrome.storage.onChanged.addListener(({ preferredCurrency }) => {
+  if (preferredCurrency) {
+    refreshPrices();
+  }
+});
+
+chrome.storage.onChanged.addListener(({ switchControl }) => {
+  if (switchControl) {
     refreshPrices();
   }
 });

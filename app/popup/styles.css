@@ -1,7 +1,10 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   width: 100%;
   min-width: 250px;
-  box-sizing: border-box;
   margin: 0;
   padding: 4px 8px;
 }
@@ -27,4 +30,32 @@ label {
 .radio-btn {
   vertical-align: middle;
   margin: 0 10px 0 3px;
+}
+
+/*  Exchange rates table  */
+
+.exc {
+  display: flex;
+  flex-wrap: wrap;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.exc-row {
+  width: 50%;
+  display: flex;
+}
+
+.exc-name {
+  padding-right: 10px;
+}
+
+.exc-val {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.exc-val:nth-child(even) {
+  padding-right: 5px;
 }

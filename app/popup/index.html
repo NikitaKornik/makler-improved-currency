@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./popup.css" />
-    <script src="popup.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="scripts.js" defer></script>
   </head>
   <body>
     <form name="switch" class="row">
@@ -26,19 +26,20 @@
         name="switch-control"
       />
     </form>
-    <!-- <hr />
+    <hr />
     <form name="main">
       <div class="row">
         <label for="currency">Preferred currency: </label>
         <select name="currency" id="currency">
-          <option value="prub selected">PMR Ruble</option>
-          <option value="lei">Moldavian Lei</option>
-          <option value="usd">US Dollar</option>
-          <option value="eur">Euro</option>
-          <option value="rub">Russian Ruble</option>
+          <option value="RUP">PMR Ruble</option>
+          <option value="USD">US Dollar</option>
+          <option value="EUR">Euro</option>
+          <option value="MDL">Moldavian Lei</option>
+          <!-- <option value="UAH">Ukrainian Hryvnia</option> -->
+          <!-- <option value="RUB">Russian Ruble</option> -->
         </select>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <label for="lang">Language: </label>
         <select name="lang" id="currency">
           <option value="ru">Русский</option>
@@ -57,23 +58,7 @@
           disabled
           title="Feature is not working yet"
         />
-      </div>
-    </form> -->
-    <!-- <hr />
-    <h3>Exchange rates</h3>
-    <table>
-      <tr>
-        <th>currency</th>
-        <th>rate</th>
-      </tr>
-      <tr>
-        <td>USD/EUR</td>
-        <td>1.1</td>
-      </tr>
-      <tr>
-        <td>EUR/USD</td>
-        <td>1.2</td>
-      </tr>
-    </table> -->
+      </div> -->
+    </form>
   </body>
 </html>

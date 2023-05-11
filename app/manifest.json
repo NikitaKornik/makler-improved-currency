@@ -20,7 +20,7 @@
   },
   "action": {
     "default_title": "makler.md currency converter",
-    "default_popup": "popup.html"
+    "default_popup": "popup/index.html"
   },
   "permissions": ["tabs", "storage", "webRequest"],
   "host_permissions": ["*://makler.md/*"]
