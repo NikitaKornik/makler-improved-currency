@@ -1,5 +1,6 @@
 const DEFAULT_SWITCH_CONTROL = "on";
 const DEFAULT_CURRENCY = "USD";
+const DEFAULT_ORIGINAL_PRICE = true;
 
 const activeIconPath = chrome.runtime.getManifest().icons;
 
@@ -17,9 +18,16 @@ chrome.storage.onChanged.addListener(({ switchControl }) => {
   }
 });
 
+function isTargetRequest(url) {
+  const feedPageRule = /\/page\/?(\d+)?$/;
+  const homePageRule = /\/search/;
+
+  return feedPageRule.test(url) || homePageRule.test(url);
+}
+
 chrome.webRequest.onCompleted.addListener(
   function (details) {
-    if (details.method === "POST" && /page\/?(\d+)?$/.test(details.url)) {
+    if (details.method === "POST" && isTargetRequest(details.url)) {
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         if (!tabs[0].url.includes("https://makler.md")) {
           return;
@@ -50,4 +58,12 @@ chrome.webRequest.onCompleted.addListener(
     DEFAULT_CURRENCY;
 
   chrome.storage.sync.set({ preferredCurrency });
+})();
+
+(async function () {
+  const isOriginalPriceShown =
+    (await chrome.storage.sync.get("isOriginalPriceShown"))
+      .isOriginalPriceShown || DEFAULT_ORIGINAL_PRICE;
+
+  chrome.storage.sync.set({ isOriginalPriceShown });
 })();

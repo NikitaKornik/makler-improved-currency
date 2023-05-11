@@ -23,5 +23,11 @@
     "default_popup": "popup/index.html"
   },
   "permissions": ["tabs", "storage", "webRequest"],
-  "host_permissions": ["*://makler.md/*"]
+  "host_permissions": ["*://makler.md/*"],
+  "web_accessible_resources": [
+    {
+      "resources": ["originalPrice.css"],
+      "matches": ["*://makler.md/*"]
+    }
+  ]
 }

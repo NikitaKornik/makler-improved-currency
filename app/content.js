@@ -1,3 +1,5 @@
+const ORIGINAL_PRICE_STYLES_ID = "original-price-styles";
+
 const fragments = [
   { fragment: "$", sign: "USD" },
   { fragment: "USD", sign: "USD" },
@@ -42,12 +44,18 @@ async function getSwitchControl() {
   return (await chrome.storage.sync.get("switchControl")).switchControl;
 }
 
+async function getIsOriginalPrice() {
+  return (await chrome.storage.sync.get("isOriginalPriceShown"))
+    .isOriginalPriceShown;
+}
+
 function getPriceSelector() {
+  const mainPage = ".ls-photo_price";
   const feedPage = ".ls-detail_price";
   const itemPage = ".item_title_price";
   const myItemsPage = ".title>.price";
 
-  return [feedPage, itemPage, myItemsPage].join(",");
+  return [mainPage, feedPage, itemPage, myItemsPage].join(",");
 }
 
 async function updatePrices() {
@@ -56,7 +64,9 @@ async function updatePrices() {
   document.querySelectorAll(getPriceSelector()).forEach((priceBlock) => {
     fragments.forEach(({ fragment, sign }) => {
       if (priceBlock.textContent.includes(fragment)) {
-        const originPrice = Number(priceBlock.textContent.replace(/\D+/g, ""));
+        const originPrice = Number(
+          priceBlock.textContent.replace(/[^0-9.]/g, "")
+        );
 
         let rate = 1;
         if (sign !== preferredCurrency) {
@@ -115,6 +125,22 @@ async function refreshPrices() {
   }
 }
 
+function injectOriginalPriceCSS() {
+  const styles = document.createElement("link");
+  styles.setAttribute("rel", "stylesheet");
+  styles.setAttribute("href", chrome.runtime.getURL("originalPrice.css"));
+  styles.setAttribute("id", ORIGINAL_PRICE_STYLES_ID);
+  document.head.appendChild(styles);
+}
+
+function removeOriginalPriceCSS() {
+  const styles = document.getElementById(ORIGINAL_PRICE_STYLES_ID);
+
+  if (styles) {
+    styles.remove();
+  }
+}
+
 chrome.runtime.onMessage.addListener(function (payload) {
   if (payload === "refresh") {
     refreshPrices();
@@ -130,6 +156,24 @@ chrome.storage.onChanged.addListener(({ preferredCurrency }) => {
 chrome.storage.onChanged.addListener(({ switchControl }) => {
   if (switchControl) {
     refreshPrices();
+  }
+});
+
+(async function () {
+  const isOriginalPrice = await getIsOriginalPrice();
+
+  if (isOriginalPrice) {
+    injectOriginalPriceCSS();
+  }
+})();
+
+chrome.storage.onChanged.addListener(({ isOriginalPriceShown }) => {
+  if (isOriginalPriceShown) {
+    if (isOriginalPriceShown.newValue) {
+      injectOriginalPriceCSS();
+    } else {
+      removeOriginalPriceCSS();
+    }
   }
 });
 

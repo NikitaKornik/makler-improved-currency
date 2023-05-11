@@ -24,22 +24,49 @@ switchForm.addEventListener("change", function () {
   chrome.storage.sync.set({ switchControl: value });
 });
 
-mainForm.elements.currency.addEventListener("change", function (e) {
-  const value = this.value;
+(async function () {
+  const { switchControl } = await chrome.storage.sync.get("switchControl");
+  switchForm.elements["switch-control"].value = switchControl;
 
-  chrome.storage.sync.set({ preferredCurrency: value });
+  injectRatesTable();
+})();
+
+mainForm.elements.currency.addEventListener("change", function (e) {
+  chrome.storage.sync.set({ preferredCurrency: e.target.value });
 });
+
+(async function () {
+  const { preferredCurrency } = await chrome.storage.sync.get(
+    "preferredCurrency"
+  );
+
+  mainForm.elements.currency.value = preferredCurrency;
+})();
+
+mainForm.elements["original-price"].addEventListener("change", function (e) {
+  chrome.storage.sync.set({
+    isOriginalPriceShown: e.target.checked,
+  });
+});
+
+(async function () {
+  const { isOriginalPriceShown } = await chrome.storage.sync.get(
+    "isOriginalPriceShown"
+  );
+
+  mainForm.elements["original-price"].checked = isOriginalPriceShown;
+})();
 
 function injectRatesTable() {
   const root = document.createElement("div");
   const table = document.createElement("div");
   table.classList.add("exc");
-  const hr = document.createElement("hr");
-  const h3 = document.createElement("h3");
-  h3.innerText = "Exchange rates";
+  const line = document.createElement("hr");
+  const heading = document.createElement("h4");
+  heading.innerText = "Exchange rates";
 
-  root.appendChild(hr);
-  root.appendChild(h3);
+  root.appendChild(line);
+  root.appendChild(heading);
 
   exchangeRates.forEach(function ({ name, rate }) {
     const row = document.createElement("div");
@@ -61,18 +88,3 @@ function injectRatesTable() {
   root.appendChild(table);
   document.body.appendChild(root);
 }
-
-(async function () {
-  const { switchControl } = await chrome.storage.sync.get("switchControl");
-  switchForm.elements["switch-control"].value = switchControl;
-
-  injectRatesTable();
-})();
-
-(async function () {
-  const { preferredCurrency } = await chrome.storage.sync.get(
-    "preferredCurrency"
-  );
-
-  mainForm.elements.currency.value = preferredCurrency;
-})();
