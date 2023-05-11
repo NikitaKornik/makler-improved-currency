@@ -63,10 +63,10 @@ async function updatePrices() {
 
   document.querySelectorAll(getPriceSelector()).forEach((priceBlock) => {
     fragments.forEach(({ fragment, sign }) => {
-      if (priceBlock.textContent.includes(fragment)) {
-        const originPrice = Number(
-          priceBlock.textContent.replace(/[^0-9.]/g, "")
-        );
+      const priceValue =
+        priceBlock.getAttribute("data-origin-value") || priceBlock.textContent;
+      if (priceValue.includes(fragment)) {
+        const originPrice = Number(priceValue.replace(/[^0-9.]/g, ""));
 
         let rate = 1;
         if (sign !== preferredCurrency) {
@@ -90,6 +90,10 @@ async function updatePrices() {
               "data-origin-value",
               priceBlock.textContent
             );
+          }
+
+          if (priceBlock.getAttribute("data-origin-value") === resultPrice) {
+            priceBlock.removeAttribute("data-origin-value");
           }
 
           priceBlock.innerHTML = resultPrice;
