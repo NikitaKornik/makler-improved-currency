@@ -30,8 +30,6 @@ const priceSelector = ".ls-detail_price, .item_title_price, .title>.price";
 
 function updatePrices() {
   document.querySelectorAll(priceSelector).forEach((priceBlock) => {
-    priceBlock.setAttribute("data-origin-value", priceBlock.textContent);
-
     fragments.forEach(({ fragment, sign }) => {
       if (priceBlock.textContent.includes(fragment)) {
         const originPrice = Number(priceBlock.textContent.replace(/\D+/g, ""));
@@ -45,11 +43,23 @@ function updatePrices() {
 
         const calculatedPrice = Math.round(originPrice * rate);
 
-        priceBlock.innerHTML =
+        const resultPrice =
           `${calculatedPrice} ${currencySigns[preferredCurrency]}`.replace(
-            /(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, // set spaces before every 3 digits
+            /(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, // Add spaces before each 3 digits
             "$1" + " "
           );
+
+        if (priceBlock.textContent !== resultPrice) {
+          if (!priceBlock.dataset.originValue) {
+            // Save original price in data attribute in case it is converted
+            priceBlock.setAttribute(
+              "data-origin-value",
+              priceBlock.textContent
+            );
+          }
+
+          priceBlock.innerHTML = resultPrice;
+        }
       }
     });
   });
