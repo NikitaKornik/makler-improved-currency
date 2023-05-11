@@ -1,4 +1,30 @@
 body {
   width: 100%;
   min-width: 250px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 4px 8px;
+}
+
+select,
+input[type="checkbox"] {
+  margin: 0 0 0 5px;
+  user-select: none;
+}
+
+label {
+  user-select: none;
+  vertical-align: middle;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 30px;
+}
+
+.radio-btn {
+  vertical-align: middle;
+  margin: 0 10px 0 3px;
 }

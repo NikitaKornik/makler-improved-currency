@@ -10,9 +10,9 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://makler.md/*"],
+      "matches": ["*://makler.md/*"],
       "js": ["content.js"],
-      "run_at": "document_start"
+      "run_at": "document_end"
     }
   ],
   "background": {
@@ -22,5 +22,6 @@
     "default_title": "makler.md currency converter",
     "default_popup": "popup.html"
   },
-  "permissions": ["tabs", "storage"]
+  "permissions": ["tabs", "storage", "webRequest"],
+  "host_permissions": ["*://makler.md/*"]
 }

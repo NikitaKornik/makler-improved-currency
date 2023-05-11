@@ -1,15 +1,13 @@
-const form = document.forms.main.elements;
+const switchForm = document.forms.switch;
+const mainForm = document.forms.main;
 
-form.refresh.addEventListener("click", function () {
-  console.log("refresh");
+switchForm.addEventListener("change", function () {
+  const value = this.elements["switch-control"].value;
 
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    console.log({ tabs }, tabs[0].id);
-
-    if (!tabs[0].url.includes('https://makler.md')) {
-      return;
-    }
-
-    chrome.tabs.sendMessage(tabs[0].id, 'refresh');
-  });
+  chrome.storage.sync.set({ switchControl: value });
 });
+
+(async function () {
+  const { switchControl } = await chrome.storage.sync.get("switchControl");
+  switchForm.elements["switch-control"].value = switchControl;
+})();
