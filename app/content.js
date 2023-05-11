@@ -15,8 +15,6 @@ const currencySigns = {
   USD: "$",
   EUR: "€",
   MDL: "Lei",
-  UAH: "грн",
-  RUB: "₽",
 };
 
 const exchangeRates = [
