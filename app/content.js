@@ -52,8 +52,9 @@ function getPriceSelector() {
   const feedPage = ".ls-detail_price";
   const itemPage = ".item_title_price";
   const myItemsPage = ".title>.price";
+  const feedPageshort = ".ls-short_price";
 
-  return [mainPage, feedPage, itemPage, myItemsPage].join(",");
+  return [mainPage, feedPage, itemPage, myItemsPage, feedPageshort].join(",");
 }
 
 async function updatePrices() {
