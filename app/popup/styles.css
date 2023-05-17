@@ -20,6 +20,13 @@ label {
   vertical-align: middle;
 }
 
+.heading {
+  height: 18px;
+  line-height: 18px;
+  margin: 0 0 5px;
+  padding: 0;
+}
+
 .row {
   display: flex;
   align-items: center;

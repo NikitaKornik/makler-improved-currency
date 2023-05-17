@@ -11,12 +11,13 @@
   "content_scripts": [
     {
       "matches": ["*://makler.md/*"],
-      "js": ["content.js"],
+      "js": ["content/originalPrice.js", "content/convertedPrice.js"],
       "run_at": "document_end"
     }
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "./service_workers/index.js",
+    "type": "module"
   },
   "action": {
     "default_title": "makler.md currency converter",

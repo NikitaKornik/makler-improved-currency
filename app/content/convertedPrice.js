@@ -1,4 +1,4 @@
-const ORIGINAL_PRICE_STYLES_ID = "original-price-styles";
+const NECESSARY_EXCHANGE_RATES_QUANTITY = 12;
 
 const fragments = [
   { fragment: "$", sign: "USD" },
@@ -17,23 +17,6 @@ const currencySigns = {
   MDL: "Lei",
 };
 
-const exchangeRates = [
-  { name: "RUP/USD", rate: 16.35 },
-  { name: "USD/RUP", rate: 16.3 },
-  { name: "RUP/EUR", rate: 18.3 },
-  { name: "EUR/RUP", rate: 17.45 },
-  { name: "RUP/MDL", rate: 0.95 },
-  { name: "MDL/RUP", rate: 0.88 },
-
-  { name: "MDL/USD", rate: 17.89 },
-  { name: "USD/MDL", rate: 17.7 },
-  { name: "MDL/EUR", rate: 19.73 },
-  { name: "EUR/MDL", rate: 19.5 },
-
-  { name: "USD/EUR", rate: 0.89 },
-  { name: "EUR/USD", rate: 1.09 },
-];
-
 async function getPreferredCurrency() {
   return (await chrome.storage.sync.get("preferredCurrency")).preferredCurrency;
 }
@@ -42,22 +25,28 @@ async function getSwitchControl() {
   return (await chrome.storage.sync.get("switchControl")).switchControl;
 }
 
-async function getIsOriginalPrice() {
-  return (await chrome.storage.sync.get("isOriginalPriceShown"))
-    .isOriginalPriceShown;
+async function getExchangeRates() {
+  return (await chrome.storage.sync.get("rates")).rates;
 }
 
 function getPriceSelector() {
   const mainPage = ".ls-photo_price";
-  const feedPage = ".ls-detail_price";
+  const feedPage = ".ls-detail_price, .ls-short_price";
   const itemPage = ".item_title_price";
   const myItemsPage = ".title>.price";
-  const feedPageshort = ".ls-short_price";
 
-  return [mainPage, feedPage, itemPage, myItemsPage, feedPageshort].join(",");
+  return [mainPage, feedPage, itemPage, myItemsPage].join(",");
 }
 
 async function updatePrices() {
+  const exchangeRates = await getExchangeRates();
+
+  if (
+    Object.values(exchangeRates).length !== NECESSARY_EXCHANGE_RATES_QUANTITY
+  ) {
+    return;
+  }
+
   const preferredCurrency = await getPreferredCurrency();
 
   document.querySelectorAll(getPriceSelector()).forEach((priceBlock) => {
@@ -69,9 +58,7 @@ async function updatePrices() {
 
         let rate = 1;
         if (sign !== preferredCurrency) {
-          rate = exchangeRates.find(function ({ name }) {
-            return name === `${sign}/${preferredCurrency}`;
-          }).rate;
+          rate = exchangeRates[`${sign}/${preferredCurrency}`];
         }
 
         const calculatedPrice = Math.round(originPrice * rate);
@@ -113,8 +100,8 @@ function revokePrices() {
   });
 }
 
-async function refreshPrices() {
-  const switchControl = await getSwitchControl();
+async function refreshPrices(switchControlProp) {
+  const switchControl = switchControlProp || (await getSwitchControl());
 
   switch (switchControl) {
     case "on":
@@ -125,22 +112,6 @@ async function refreshPrices() {
       break;
     default:
       return;
-  }
-}
-
-function injectOriginalPriceCSS() {
-  const styles = document.createElement("link");
-  styles.setAttribute("rel", "stylesheet");
-  styles.setAttribute("href", chrome.runtime.getURL("originalPrice.css"));
-  styles.setAttribute("id", ORIGINAL_PRICE_STYLES_ID);
-  document.head.appendChild(styles);
-}
-
-function removeOriginalPriceCSS() {
-  const styles = document.getElementById(ORIGINAL_PRICE_STYLES_ID);
-
-  if (styles) {
-    styles.remove();
   }
 }
 
@@ -156,28 +127,18 @@ chrome.storage.onChanged.addListener(({ preferredCurrency }) => {
   }
 });
 
-chrome.storage.onChanged.addListener(({ switchControl }) => {
-  if (switchControl) {
+chrome.storage.onChanged.addListener(({ rates }) => {
+  if (rates) {
     refreshPrices();
   }
 });
 
-(async function () {
-  const isOriginalPrice = await getIsOriginalPrice();
-
-  if (isOriginalPrice) {
-    injectOriginalPriceCSS();
-  }
-})();
-
-chrome.storage.onChanged.addListener(({ isOriginalPriceShown }) => {
-  if (isOriginalPriceShown) {
-    if (isOriginalPriceShown.newValue) {
-      injectOriginalPriceCSS();
-    } else {
-      removeOriginalPriceCSS();
-    }
+chrome.storage.onChanged.addListener(({ switchControl }) => {
+  if (switchControl) {
+    refreshPrices(switchControl.newValue);
   }
 });
 
-refreshPrices();
+(function () {
+  refreshPrices();
+})();
