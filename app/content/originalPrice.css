@@ -30,3 +30,17 @@
   margin-left: 5px;
   font-weight: normal;
 }
+
+.ls-short_price:after {
+  content: "";
+  display: none;
+}
+
+.ls-short_price:before {
+  content: attr(data-origin-value);
+  display: inline-block;
+  font-size: 10px;
+  color: rgb(119, 134, 108);
+  margin-right: 5px;
+  font-weight: normal;
+}
