@@ -9,23 +9,26 @@
     <script type="module" src="scripts.js" defer></script>
   </head>
   <body>
-    <form name="switch" class="row">
-      <label for="switch-on">ON</label>
-      <input
-        id="switch-on"
-        type="radio"
-        value="on"
-        class="radio-btn"
-        name="switch-control"
-      />
-      <label for="switch-off">OFF</label>
-      <input
-        id="switch-off"
-        type="radio"
-        value="off"
-        class="radio-btn"
-        name="switch-control"
-      />
+    <form name="switch" class="switch-form row">
+      <div>
+        <label for="switch-on">ON</label>
+        <input
+          id="switch-on"
+          type="radio"
+          value="on"
+          class="radio-btn"
+          name="switch-control"
+        />
+        <label for="switch-off">OFF</label>
+        <input
+          id="switch-off"
+          type="radio"
+          value="off"
+          class="radio-btn"
+          name="switch-control"
+        />
+      </div>
+      <div class="version">Version: <span id="version"></span></div>
     </form>
     <hr />
     <form name="main">
