@@ -27,7 +27,7 @@
   "host_permissions": ["*://makler.md/*"],
   "web_accessible_resources": [
     {
-      "resources": ["originalPrice.css"],
+      "resources": ["content/originalPrice.css"],
       "matches": ["*://makler.md/*"]
     }
   ]

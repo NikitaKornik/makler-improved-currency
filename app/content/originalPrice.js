@@ -8,7 +8,10 @@ async function getIsOriginalPrice() {
 function injectOriginalPriceCSS() {
   const styles = document.createElement("link");
   styles.setAttribute("rel", "stylesheet");
-  styles.setAttribute("href", chrome.runtime.getURL("originalPrice.css"));
+  styles.setAttribute(
+    "href",
+    chrome.runtime.getURL("content/originalPrice.css")
+  );
   styles.setAttribute("id", ORIGINAL_PRICE_STYLES_ID);
   document.head.appendChild(styles);
 }
