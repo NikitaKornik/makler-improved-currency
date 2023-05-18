@@ -1,17 +1,22 @@
 const ratesOrder = [
-  "RUP/USD",
   "USD/RUP",
-  "RUP/EUR",
+  "RUP/USD",
   "EUR/RUP",
-  "RUP/MDL",
+  "RUP/EUR",
   "MDL/RUP",
-  "MDL/USD",
+  "RUP/MDL",
   "USD/MDL",
-  "MDL/EUR",
+  "MDL/USD",
   "EUR/MDL",
-  "USD/EUR",
+  "MDL/EUR",
   "EUR/USD",
+  "USD/EUR",
 ];
+
+function round(num, decimals = 2) {
+  const operand = Math.pow(10, decimals);
+  return Math.round((num + Number.EPSILON) * operand) / operand;
+}
 
 async function getExchangeRates() {
   const rates = (await chrome.storage.sync.get("rates")).rates;
@@ -51,7 +56,7 @@ async function injectRatesTable(ratesProp) {
 
     const colValue = document.createElement("div");
     colValue.classList.add("exc-value");
-    colValue.innerText = rates[name] || "-";
+    colValue.innerText = round(rates[name], 4) || "-";
 
     row.appendChild(colName);
     row.appendChild(colValue);

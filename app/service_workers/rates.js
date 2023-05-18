@@ -1,6 +1,4 @@
-function round(num) {
-  return Math.round((num + Number.EPSILON) * 100) / 100;
-}
+import { PMRRatesAdaptor, MDLRatesAdaptor } from "./rateAdaptors.js";
 
 const getRates = async function () {
   return (await chrome.storage.sync.get("rates")).rates;
@@ -27,22 +25,17 @@ const getPMRRates = async function () {
 
   const result = {};
 
-  const ratesAdaptor = [
-    { name: "RUP/USD", key: "abbr", val: "USD", attr: "sale" },
-    { name: "USD/RUP", key: "abbr", val: "USD", attr: "buy" },
-    { name: "RUP/EUR", key: "abbr", val: "EUR", attr: "sale" },
-    { name: "EUR/RUP", key: "abbr", val: "EUR", attr: "buy" },
-    { name: "RUP/MDL", key: "abbr", val: "MDL", attr: "sale" },
-    { name: "MDL/RUP", key: "abbr", val: "MDL", attr: "buy" },
-  ];
-
-  ratesAdaptor.forEach(function (rule) {
+  PMRRatesAdaptor.forEach(function (rule) {
     const rate = rates.find(function (currency) {
       return currency[rule.key] === rule.val;
     });
 
     if (rate && rate[rule.attr]) {
-      result[rule.name] = round(Number(rate[rule.attr]));
+      if (rule.action === "divide") {
+        result[rule.name] = 1 / Number(rate[rule.attr]);
+      } else {
+        result[rule.name] = Number(rate[rule.attr]);
+      }
     }
   });
 
@@ -61,29 +54,26 @@ const getMDLRates = async function () {
 
   const result = {};
 
-  const ratesAdaptor = [
-    { name: "MDL/USD", key: "currency", val: "USD", attr: "selling" },
-    { name: "USD/MDL", key: "currency", val: "USD", attr: "buying" },
-    { name: "MDL/EUR", key: "currency", val: "EUR", attr: "selling" },
-    { name: "EUR/MDL", key: "currency", val: "EUR", attr: "buying" },
-  ];
-
-  ratesAdaptor.forEach(function (rule) {
+  MDLRatesAdaptor.forEach(function (rule) {
     const rate = rates.find(function (currency) {
       return currency[rule.key] === rule.val;
     });
 
     if (rate && rate[rule.attr]) {
-      result[rule.name] = round(Number(rate[rule.attr]));
+      if (rule.action === "divide") {
+        result[rule.name] = 1 / Number(rate[rule.attr]);
+      } else {
+        result[rule.name] = Number(rate[rule.attr]);
+      }
     }
   });
 
   if (result["USD/MDL"] && result["MDL/EUR"]) {
-    result["USD/EUR"] = round(result["USD/MDL"] / result["MDL/EUR"]);
+    result["USD/EUR"] = result["USD/MDL"] * result["MDL/EUR"];
   }
 
   if (result["EUR/MDL"] && result["MDL/USD"]) {
-    result["EUR/USD"] = round(result["EUR/MDL"] / result["MDL/USD"]);
+    result["EUR/USD"] = result["EUR/MDL"] * result["MDL/USD"];
   }
 
   if (Object.keys(result).length) {
