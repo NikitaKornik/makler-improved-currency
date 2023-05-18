@@ -1,4 +1,4 @@
-const NECESSARY_EXCHANGE_RATES_QUANTITY = 12;
+const FULL_EXCHANGE_RATES_AMOUNT = 12;
 
 const fragments = [
   { fragment: "$", sign: "USD" },
@@ -38,54 +38,60 @@ function getPriceSelector() {
   return [mainPage, feedPage, itemPage, myItemsPage].join(",");
 }
 
-async function updatePrices() {
+function updateDOMValue(DOMEl, value) {
+  if (DOMEl.innerHTML !== value) {
+    DOMEl.innerHTML = value;
+  }
+}
+
+async function updatePrices(preferredCurrency) {
   const exchangeRates = await getExchangeRates();
 
-  if (
-    Object.values(exchangeRates).length !== NECESSARY_EXCHANGE_RATES_QUANTITY
-  ) {
+  if (Object.values(exchangeRates).length !== FULL_EXCHANGE_RATES_AMOUNT) {
     return;
   }
 
-  const preferredCurrency = await getPreferredCurrency();
-
   document.querySelectorAll(getPriceSelector()).forEach((priceBlock) => {
-    fragments.forEach(({ fragment, sign }) => {
-      const priceValue =
-        priceBlock.getAttribute("data-origin-value") || priceBlock.textContent;
-      if (priceValue.includes(fragment)) {
-        const originPrice = Number(priceValue.replace(/[^0-9.]/g, ""));
+    const originalValue =
+      priceBlock.dataset.originValue || priceBlock.textContent;
 
-        let rate = 1;
-        if (sign !== preferredCurrency) {
-          rate = exchangeRates[`${sign}/${preferredCurrency}`];
-        }
-
-        const calculatedPrice = Math.round(originPrice * rate);
-
-        const resultPrice =
-          `${calculatedPrice} ${currencySigns[preferredCurrency]}`.replace(
-            /(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, // Add spaces before each 3 digits
-            "$1" + " "
-          );
-
-        if (priceBlock.textContent !== resultPrice) {
-          if (!priceBlock.dataset.originValue) {
-            // Save original price in data attribute in case it is converted
-            priceBlock.setAttribute(
-              "data-origin-value",
-              priceBlock.textContent
-            );
-          }
-
-          if (priceBlock.getAttribute("data-origin-value") === resultPrice) {
-            priceBlock.removeAttribute("data-origin-value");
-          }
-
-          priceBlock.innerHTML = resultPrice;
-        }
-      }
+    const targetFragment = fragments.find(({ fragment }) => {
+      return originalValue.includes(fragment);
     });
+
+    if (!targetFragment) {
+      return;
+    }
+
+    const { sign } = targetFragment;
+
+    if (sign === preferredCurrency) {
+      updateDOMValue(priceBlock, originalValue);
+
+      delete priceBlock.dataset.originValue;
+      return;
+    }
+
+    const rate = exchangeRates[`${sign}/${preferredCurrency}`];
+    const originalPrice = Number(originalValue.replace(/[^0-9.]/g, ""));
+    const calculatedPrice = Math.round(originalPrice * rate);
+
+    const resultPrice =
+      `${calculatedPrice} ${currencySigns[preferredCurrency]}`.replace(
+        /(\d{1,3}(?=(?:\d\d\d)+(?!\d)))/g, // Add spaces before each 3 digits
+        "$1" + " "
+      );
+
+    if (!priceBlock.dataset.originValue) {
+      // Save original price in data attribute in case it is converted
+      priceBlock.dataset.originValue = priceBlock.textContent;
+    }
+
+    if (priceBlock.dataset.originValue === resultPrice) {
+      delete priceBlock.dataset.originValue;
+    }
+
+    updateDOMValue(priceBlock, resultPrice);
   });
 }
 
@@ -100,12 +106,13 @@ function revokePrices() {
   });
 }
 
-async function refreshPrices(switchControlProp) {
-  const switchControl = switchControlProp || (await getSwitchControl());
+async function refreshPrices(switchProp, currency) {
+  const switchControl = switchProp || (await getSwitchControl());
+  const preferredCurrency = currency || (await getPreferredCurrency());
 
   switch (switchControl) {
     case "on":
-      updatePrices();
+      updatePrices(preferredCurrency);
       break;
     case "off":
       revokePrices();
@@ -123,7 +130,7 @@ chrome.runtime.onMessage.addListener(function (payload) {
 
 chrome.storage.onChanged.addListener(({ preferredCurrency }) => {
   if (preferredCurrency) {
-    refreshPrices();
+    refreshPrices(null, preferredCurrency.newValue);
   }
 });
 
