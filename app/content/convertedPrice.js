@@ -122,30 +122,22 @@ async function refreshPrices(switchProp, currency) {
   }
 }
 
+chrome.storage.onChanged.addListener((state) => {
+  if (state.preferredCurrency) {
+    refreshPrices(null, state.preferredCurrency.newValue);
+  }
+  if (state.switchControl) {
+    refreshPrices(state.switchControl.newValue);
+  }
+  if (state.rates) {
+    refreshPrices();
+  }
+});
+
 chrome.runtime.onMessage.addListener(function (payload) {
   if (payload === "refresh") {
     refreshPrices();
   }
 });
 
-chrome.storage.onChanged.addListener(({ preferredCurrency }) => {
-  if (preferredCurrency) {
-    refreshPrices(null, preferredCurrency.newValue);
-  }
-});
-
-chrome.storage.onChanged.addListener(({ rates }) => {
-  if (rates) {
-    refreshPrices();
-  }
-});
-
-chrome.storage.onChanged.addListener(({ switchControl }) => {
-  if (switchControl) {
-    refreshPrices(switchControl.newValue);
-  }
-});
-
-(function () {
-  refreshPrices();
-})();
+refreshPrices();
