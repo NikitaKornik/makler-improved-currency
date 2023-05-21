@@ -3,6 +3,7 @@
   display: inline-block;
   font-size: 12px;
   color: rgb(119, 134, 108);
+  white-space: nowrap;
 }
 
 .ls-detail_price {
@@ -42,4 +43,5 @@
   color: rgb(119, 134, 108);
   margin-right: 5px;
   font-weight: normal;
+  white-space: nowrap;
 }
