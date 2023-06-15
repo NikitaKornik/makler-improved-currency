@@ -71,7 +71,7 @@ const switchForm = document.forms.switch;
 const mainForm = document.forms.main;
 
 switchForm.addEventListener("change", function () {
-  const value = this.elements["switch-control"].value;
+  const value = this.elements["switch-control"].checked;
 
   chrome.storage.sync.set({ switchControl: value });
 });
@@ -88,7 +88,11 @@ mainForm.elements["original-price"].addEventListener("change", function (e) {
 
 (async function () {
   const { switchControl } = await chrome.storage.sync.get("switchControl");
-  switchForm.elements["switch-control"].value = switchControl;
+
+  const switchTemplate = switchForm.querySelector("template");
+  switchTemplate.content.querySelector("input").checked = switchControl;
+
+  switchTemplate.after(switchTemplate.content);
 
   const { preferredCurrency } = await chrome.storage.sync.get(
     "preferredCurrency"

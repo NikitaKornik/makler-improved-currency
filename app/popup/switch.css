@@ -1,0 +1,44 @@
+:root {
+  --width: 40px;
+  --height: 20px;
+  --padding: 2.5px;
+}
+
+.switch-form {
+  justify-content: space-between;
+}
+
+#switch:checked ~ .switch-label {
+  background: seagreen;
+}
+
+#switch:checked ~ .switch-label:before {
+  left: calc(100% - var(--padding));
+  transform: translateX(-100%);
+}
+
+.switch-label {
+  display: block;
+  width: var(--width);
+  height: var(--height);
+  background: grey;
+  border-radius: calc(var(--height) / 2);
+  position: relative;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.switch-label:before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: calc(var(--height) - var(--padding) * 2);
+  height: calc(var(--height) - var(--padding) * 2);
+  border-radius: 50%;
+  background: white;
+  left: var(--padding);
+  top: var(--padding);
+  transition: 0.2s;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}

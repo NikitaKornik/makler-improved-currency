@@ -34,15 +34,6 @@ label {
   height: 30px;
 }
 
-.radio-btn {
-  vertical-align: middle;
-  margin: 0 10px 0 3px;
-}
-
-.switch-form {
-  justify-content: space-between;
-}
-
 .version {
   font-size: 10px;
 }

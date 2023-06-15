@@ -1,4 +1,4 @@
-const DEFAULT_SWITCH_CONTROL = "on";
+const DEFAULT_SWITCH_CONTROL = true;
 
 const activeIconPath = {
   128: "../images/icon-128.png",
@@ -12,24 +12,24 @@ const inactiveIconPath = {
   48: "../images/inactive/icon-48.png",
 };
 
-chrome.storage.onChanged.addListener(({ switchControl }) => {
-  if (switchControl) {
-    chrome.action.setIcon({
-      path: switchControl.newValue === "on" ? activeIconPath : inactiveIconPath,
-    });
-  }
-});
+function updateIcons(isActive) {
+  chrome.action.setIcon({
+    path: isActive ? activeIconPath : inactiveIconPath,
+  });
+}
+
+chrome.storage.onChanged.addListener((e) =>
+  updateIcons(e.switchControl.newValue)
+);
 
 const setDefaultSwitch = async function () {
-  const switchControl =
-    (await chrome.storage.sync.get("switchControl")).switchControl ||
-    DEFAULT_SWITCH_CONTROL;
+  let switchControl = await chrome.storage.sync.get("switchControl");
+
+  switchControl = switchControl === undefined && DEFAULT_SWITCH_CONTROL;
 
   chrome.storage.sync.set({ switchControl });
 
-  chrome.action.setIcon({
-    path: switchControl === "on" ? activeIconPath : inactiveIconPath,
-  });
+  updateIcons(switchControl);
 };
 
 setDefaultSwitch();

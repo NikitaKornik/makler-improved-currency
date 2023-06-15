@@ -110,15 +110,10 @@ async function refreshPrices(switchProp, currency) {
   const switchControl = switchProp || (await getSwitchControl());
   const preferredCurrency = currency || (await getPreferredCurrency());
 
-  switch (switchControl) {
-    case "on":
-      updatePrices(preferredCurrency);
-      break;
-    case "off":
-      revokePrices();
-      break;
-    default:
-      return;
+  if (switchControl) {
+    updatePrices(preferredCurrency);
+  } else {
+    revokePrices();
   }
 }
 

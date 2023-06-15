@@ -5,29 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="switch.css" />
     <link rel="stylesheet" href="spinner.css" />
     <script type="module" src="scripts.js" defer></script>
   </head>
   <body>
-    <form name="switch" class="switch-form row">
-      <div>
-        <label for="switch-on">ON</label>
-        <input
-          id="switch-on"
-          type="radio"
-          value="on"
-          class="radio-btn"
-          name="switch-control"
-        />
-        <label for="switch-off">OFF</label>
-        <input
-          id="switch-off"
-          type="radio"
-          value="off"
-          class="radio-btn"
-          name="switch-control"
-        />
-      </div>
+    <form name="switch" class="row switch-form">
+      <template>
+        <div>
+          <input id="switch" type="checkbox" name="switch-control" hidden />
+          <label class="switch-label" for="switch"></label>
+        </div>
+      </template>
       <div class="version">Version: <span id="version"></span></div>
     </form>
     <hr />
