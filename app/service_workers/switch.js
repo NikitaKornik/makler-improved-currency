@@ -23,9 +23,11 @@ chrome.storage.onChanged.addListener((e) =>
 );
 
 const setDefaultSwitch = async function () {
-  let switchControl = await chrome.storage.sync.get("switchControl");
+  let { switchControl } = await chrome.storage.sync.get("switchControl");
 
-  switchControl = switchControl === undefined && DEFAULT_SWITCH_CONTROL;
+  if (switchControl === undefined) {
+    switchControl = DEFAULT_SWITCH_CONTROL;
+  }
 
   chrome.storage.sync.set({ switchControl });
 
