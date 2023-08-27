@@ -44,6 +44,21 @@ function updateDOMValue(DOMEl, value) {
   }
 }
 
+function calculate(sign, preferredCurrency, originalValue, exchangeRates) {
+  const rate = exchangeRates[`${sign}/${preferredCurrency}`];
+  const originalPrice = Number(originalValue.replace(/[^0-9.]/g, ""));
+
+  const calculatedPrice = originalPrice * rate;
+  let roundFunction = Math.round;
+
+  // Avoid converts into 0. E.g 5 LEI = 0 USD
+  if (calculatedPrice < 1 && originalPrice) {
+    roundFunction = Math.ceil;
+  }
+
+  return roundFunction(calculatedPrice);
+}
+
 async function updatePrices(preferredCurrency) {
   const exchangeRates = await getExchangeRates();
 
@@ -72,9 +87,12 @@ async function updatePrices(preferredCurrency) {
       return;
     }
 
-    const rate = exchangeRates[`${sign}/${preferredCurrency}`];
-    const originalPrice = Number(originalValue.replace(/[^0-9.]/g, ""));
-    const calculatedPrice = Math.round(originalPrice * rate);
+    const calculatedPrice = calculate(
+      sign,
+      preferredCurrency,
+      originalValue,
+      exchangeRates
+    );
 
     const resultPrice =
       `${calculatedPrice} ${currencySigns[preferredCurrency]}`.replace(
