@@ -28,13 +28,10 @@ async function injectRatesTable(ratesProp) {
   const rates = ratesProp || (await getExchangeRates());
   const isReady = Object.values(rates).length >= ratesOrder.length;
 
-  const root = document.createElement("div");
-  const table = document.createElement("div");
-  table.classList.add("exc");
-  const line = document.createElement("hr");
+  const table = document.getElementById("exc-table");
   const heading = document.createElement("h4");
   heading.classList.add("heading");
-  heading.innerText = "Exchange rates";
+  heading.setAttribute("data-t", "rates.label");
 
   if (!isReady) {
     const loading = document.createElement("div");
@@ -42,9 +39,6 @@ async function injectRatesTable(ratesProp) {
     loading.innerHTML = "<div></div><div></div><div></div><div></div>";
     heading.appendChild(loading);
   }
-
-  root.appendChild(line);
-  root.appendChild(heading);
 
   ratesOrder.forEach(function (name) {
     const row = document.createElement("div");
@@ -62,9 +56,6 @@ async function injectRatesTable(ratesProp) {
     row.appendChild(colValue);
     table.appendChild(row);
   });
-
-  root.appendChild(table);
-  document.body.appendChild(root);
 }
 
 const switchForm = document.forms.switch;

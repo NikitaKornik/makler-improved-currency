@@ -1,0 +1,17 @@
+{
+  "version": "Versiune",
+  "currency": {
+    "label": "Conversie în",
+    "options": {
+      "rup": "Rublă transnistreană",
+      "usd": "Dolar american",
+      "eur": "Euro",
+      "mdl": "Leu moldovenesc"
+    }
+  },
+  "language": {
+    "label": "Limbă"
+  },
+  "original_price": "Afișați moneda originală",
+  "rates": { "label": "Cursuri de schimb valutar" }
+}

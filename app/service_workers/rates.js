@@ -1,4 +1,4 @@
-import { PMRRatesAdaptor, MDLRatesAdaptor } from "./rateAdaptors.js";
+import { PMRRatesAdaptor, MDLRatesAdaptor } from "../constants/rateAdaptors.js";
 
 const getRates = async function () {
   return (await chrome.storage.sync.get("rates")).rates;
