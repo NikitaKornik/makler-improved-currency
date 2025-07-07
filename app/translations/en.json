@@ -1,0 +1,17 @@
+{
+  "version": "Version",
+  "currency": {
+    "label": "Preferred currency",
+    "options": {
+      "rup": "PMR Ruble",
+      "usd": "US Dollar",
+      "eur": "Euro",
+      "mdl": "Moldavian Lei"
+    }
+  },
+  "language": {
+    "label": "Language"
+  },
+  "original_price": "Display original price",
+  "rates": { "label": "Exchange rates" }
+}

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="switch.css" />
     <link rel="stylesheet" href="spinner.css" />
     <script type="module" src="scripts.js" defer></script>
+    <script type="module" src="locale.js" defer></script>
   </head>
   <body>
     <form name="switch" class="row switch-form">
@@ -17,32 +18,41 @@
           <label class="switch-label" for="switch"></label>
         </div>
       </template>
-      <div class="version">Version: <span id="version"></span></div>
+      <div class="version">
+        <span data-t="version"></span>: <span id="version"></span>
+      </div>
     </form>
     <hr />
     <form name="main">
       <div class="row">
-        <label for="currency">Preferred currency: </label>
-        <select name="currency" id="currency">
-          <option value="RUP">PMR Ruble</option>
-          <option value="USD">US Dollar</option>
-          <option value="EUR">Euro</option>
-          <option value="MDL">Moldavian Lei</option>
-        </select>
-      </div>
-      <!-- <div class="row">
-        <label for="lang">Language: </label>
-        <select name="lang" id="currency">
+        <label for="lang"><span data-t="language.label"></span>: </label>
+        <select name="lang" id="language">
           <option value="ru">Русский</option>
           <option value="en" selected>English</option>
           <option value="ro">Română</option>
           <option value="uk">Українська</option>
         </select>
-      </div>-->
+      </div>
       <div class="row">
-        <label for="original-price">Display original price: </label>
+        <label for="currency"><span data-t="currency.label"></span>: </label>
+        <select name="currency" id="currency">
+          <option value="RUP" data-t="currency.options.rup"></option>
+          <option value="USD" data-t="currency.options.usd"></option>
+          <option value="EUR" data-t="currency.options.eur"></option>
+          <option value="MDL" data-t="currency.options.mdl"></option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="original-price"
+          ><span data-t="original_price"></span>:
+        </label>
         <input id="original-price" type="checkbox" name="original-price" />
       </div>
     </form>
+    <div>
+      <hr />
+      <h4 class="heading" data-t="rates.label"></h4>
+      <div class="exc" id="exc-table"></div>
+    </div>
   </body>
 </html>
